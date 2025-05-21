@@ -98,5 +98,5 @@ st.subheader(f"**{question}**")
 for text, next_step in options:
     if st.button(text):
         st.session_state.current_question = next_step
-        st.experimental_rerun = lambda: None  # Придушення, якщо десь є виклик
+        st.rerun() 
         break
