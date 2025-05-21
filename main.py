@@ -76,22 +76,26 @@ final_classes = ["Жрець", "Чаклун", "Чарівник", "Маг", "Б
                  "Шпигун", "Воїн", "Варвар", "Рейнджер", "Паладин", "Монах"]
 
 
-if "current_question" not in st.session_state:
-    st.session_state.current_question = "Хочеш чаклувати чи трощити все навколо?"
+if "history" not in st.session_state:
+    st.session_state.history = ["Хочеш чаклувати чи трощити все навколо?"]
 
-st.title("Який клас D&D тобі підійде?")
-st.markdown("Відповідай на кілька питань і дізнайся свій клас!")
 
-question = st.session_state.current_question
-options = decision_tree.get(question, [])
+current_question = st.session_state.history[-1]
 
-st.subheader(question)
+st.title("🧙‍♂️ Який клас D&D тобі підійде?")
+st.markdown("Відповідай на кілька питань, щоб дізнатися свій клас!")
+
+if current_question in final_classes:
+    st.success(f"🎉 Тобі слід грати за: **{current_question}**")
+    if st.button("Почати спочатку"):
+        st.session_state.history = ["Хочеш чаклувати чи трощити все навколо?"]
+    st.stop()
+
+
+st.subheader(current_question)
+options = decision_tree.get(current_question, [])
 
 for text, next_step in options:
     if st.button(text):
-        if next_step in final_classes:
-            st.success(f"Тобі слід грати за: **{next_step}**!")
-            st.session_state.current_question = "Хочеш чаклувати чи трощити все навколо?"
-        else:
-            st.session_state.current_question = next_step
-        st.experimental_rerun()
+        st.session_state.history.append(next_step)
+        st.experimental_rerun() 
